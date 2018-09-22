@@ -48,8 +48,13 @@ public class PositionLayer extends Layer {
         final int centerX = (int) (pixelX - topLeftPoint.x);
         final int centerY = (int) (pixelY - topLeftPoint.y);
 
+        float scaleFactor = this.displayModel.getScaleFactor();
+        if (scaleFactor < 1) {
+            // avoid IllegalArgumentException for very small/old devices
+            scaleFactor = 1;
+        }
         final int radius = (int) MercatorProjection.metersToPixelsWithScaleFactor(accuracy, location.latitude,
-                this.displayModel.getScaleFactor(), this.displayModel.getTileSize());
+                scaleFactor, this.displayModel.getTileSize());
 
         if (accuracyCircle == null) {
             accuracyCircle = AndroidGraphicFactory.INSTANCE.createPaint();
